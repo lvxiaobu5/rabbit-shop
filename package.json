@@ -1,9 +1,9 @@
 {
-  "name": "uni-app-xiaotuxian",
-  "version": "0.0.0",
+  "name": "rabbit-shop",
+  "version": "1.0.0",
   "author": {
-    "name": "itheima",
-    "url": "https://web.itheima.com/"
+    "name": "xiaobu",
+    "url": "https://github.com/lvxiaobu5"
   },
   "scripts": {
     "dev:app": "uni -p app",
@@ -63,6 +63,7 @@
     "@dcloudio/uni-mp-weixin": "3.0.0-alpha-3081220230802001",
     "@dcloudio/uni-mp-xhs": "3.0.0-alpha-3081220230802001",
     "@dcloudio/uni-quickapp-webview": "3.0.0-alpha-3081220230802001",
+    "@dcloudio/uni-ui": "^1.5.0",
     "pinia": "2.0.27",
     "pinia-plugin-persistedstate": "^3.2.0",
     "vue": "^3.2.47",
