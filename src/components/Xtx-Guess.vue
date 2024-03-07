@@ -28,9 +28,15 @@ const getHomeGoodsGuessLikeData = async () => {
     finish.value = true
   }
 }
+const resetData = () => {
+  pageParams.page = 1
+  guessList.value = []
+  finish.value = false
+}
 // 子组件暴露属性或方法给父组件调用，还能给方法起一个名字
 defineExpose({
   getMore: getHomeGoodsGuessLikeData,
+  resetData,
 })
 // 组件挂载完毕
 onMounted(() => {

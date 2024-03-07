@@ -32,18 +32,24 @@ const getHomeHotData = async () => {
 // 滚动触底
 const onScrolltolower = () => {
   console.log('触底')
-  guessRef.value.getMore()
+  guessRef.value?.getMore()
 }
 // 自定义下拉刷新被触发
 const onRefresherrefresh = async () => {
   // 开启...加载中动画
   isTriggered.value = true
+  guessRef.value?.resetData()
   // 写await并不能同时发送请求，浪费性能
   // await getHomeBannerData()
   // await getHomeCategoryData()
   // getHomeHotData()
   // Promise.all配合await才是最优解
-  await Promise.all([getHomeBannerData(), getHomeCategoryData(), getHomeHotData()])
+  await Promise.all([
+    getHomeBannerData(),
+    getHomeCategoryData(),
+    getHomeHotData(),
+    guessRef.value?.getMore(),
+  ])
   // 开启...加载中动画
   isTriggered.value = false
 }
