@@ -2,13 +2,21 @@
 import { getGoodsGuessLikeAPI } from '@/services/home'
 import { onMounted, ref } from 'vue'
 import type { GuessItem } from '@/types/home'
+import type { PageParams } from '@/types/global'
 
 const guessList = ref<GuessItem[]>([])
+const pageParams: Required<PageParams> = {
+  page: 1,
+  pageSize: 10,
+}
 // 获取猜你喜欢数据
 const getHomeGoodsGuessLikeData = async () => {
-  const res = await getGoodsGuessLikeAPI()
-  guessList.value = res.result.items
-  console.log(3, res)
+  const res = await getGoodsGuessLikeAPI(pageParams)
+  // guessList.value = res.result.items
+  // 数组追加
+  guessList.value.push(...res.result.items)
+  // 页码累加
+  pageParams.page++
 }
 // 子组件暴露属性或方法给父组件调用，还能给方法起一个名字
 defineExpose({
