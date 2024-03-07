@@ -12,6 +12,7 @@ const bannerList = ref<BannerItem[]>([])
 const categoryList = ref<CategoryItem[]>([])
 const hotList = ref<HotItem[]>([])
 const guessRef = ref<XtxGuessInstance>()
+const isTriggered = ref(false)
 // 获取轮播图数据
 const getHomeBannerData = async () => {
   const res = await getHomeBannerAPI()
@@ -33,7 +34,19 @@ const onScrolltolower = () => {
   console.log('触底')
   guessRef.value.getMore()
 }
-
+// 自定义下拉刷新被触发
+const onRefresherrefresh = async () => {
+  // 开启...加载中动画
+  isTriggered.value = true
+  // 写await并不能同时发送请求，浪费性能
+  // await getHomeBannerData()
+  // await getHomeCategoryData()
+  // getHomeHotData()
+  // Promise.all配合await才是最优解
+  await Promise.all([getHomeBannerData(), getHomeCategoryData(), getHomeHotData()])
+  // 开启...加载中动画
+  isTriggered.value = false
+}
 // 页面加载时触发
 onLoad(() => {
   getHomeBannerData()
@@ -45,7 +58,15 @@ onLoad(() => {
 <template>
   <!-- 自定义导航栏 -->
   <CustomNavbar />
-  <scroll-view @scrolltolower="onScrolltolower" class="scroll-view" scroll-y>
+  <!-- 滚动容器 -->
+  <scroll-view
+    refresher-enabled
+    @refresherrefresh="onRefresherrefresh"
+    :refresher-triggered="isTriggered"
+    @scrolltolower="onScrolltolower"
+    class="scroll-view"
+    scroll-y
+  >
     <!-- 自定义轮播图 -->
     <Xtx-Swiper :list="bannerList" />
     <!-- 分类面板 -->
