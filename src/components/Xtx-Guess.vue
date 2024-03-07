@@ -5,18 +5,28 @@ import type { GuessItem } from '@/types/home'
 import type { PageParams } from '@/types/global'
 
 const guessList = ref<GuessItem[]>([])
+const finish = ref(false)
 const pageParams: Required<PageParams> = {
   page: 1,
   pageSize: 10,
 }
 // 获取猜你喜欢数据
 const getHomeGoodsGuessLikeData = async () => {
+  // 如果数据到底了就退出
+  if (finish.value === true) {
+    return uni.showToast({ icon: 'none', title: '没有更多数据了~' })
+  }
   const res = await getGoodsGuessLikeAPI(pageParams)
   // guessList.value = res.result.items
   // 数组追加
   guessList.value.push(...res.result.items)
-  // 页码累加
-  pageParams.page++
+  // 分页条件
+  if (pageParams.page < res.result.pages) {
+    // 页码累加
+    pageParams.page++
+  } else {
+    finish.value = true
+  }
 }
 // 子组件暴露属性或方法给父组件调用，还能给方法起一个名字
 defineExpose({
@@ -48,7 +58,9 @@ onMounted(() => {
       </view>
     </navigator>
   </view>
-  <view class="loading-text"> 正在加载... </view>
+  <view class="loading-text">
+    {{ finish ? '人家是有底线的~' : '正在加载...' }}
+  </view>
 </template>
 
 <style lang="scss">
