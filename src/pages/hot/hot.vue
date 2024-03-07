@@ -33,6 +33,25 @@ const getHotRecommendData = async () => {
   bannerPicture.value = res.result.bannerPicture
   subTypes.value = res.result.subTypes
 }
+// 滚动触底
+const onScrolltolower = async () => {
+  // 获取当前选项
+  const curSubType = subTypes.value[activeIndex.value]
+  console.log(6, curSubType)
+  // 当前页码累加
+  curSubType.goodsItems.page++
+  // 调用API传参
+  const res = await getHotRecommendAPI(curUrlMap!.url, {
+    subType: curSubType.id,
+    page: curSubType.goodsItems.page,
+    pageSize: curSubType.goodsItems.pageSize,
+  })
+  console.log(7, res)
+  // 新的列表选项
+  const newSubType = res.result.subTypes[activeIndex.value]
+  // 数组追加
+  curSubType.goodsItems.items.push(...newSubType.goodsItems.items)
+}
 onLoad(() => {
   getHotRecommendData()
 })
@@ -62,6 +81,7 @@ onLoad(() => {
       :key="item.id"
       v-show="activeIndex === index"
       scroll-y
+      @scrolltolower="onScrolltolower"
       class="scroll-view"
     >
       <view class="goods">
