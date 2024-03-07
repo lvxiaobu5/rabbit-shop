@@ -10,6 +10,10 @@ const getHomeGoodsGuessLikeData = async () => {
   guessList.value = res.result.items
   console.log(3, res)
 }
+// 子组件暴露属性或方法给父组件调用，还能给方法起一个名字
+defineExpose({
+  getMore: getHomeGoodsGuessLikeData,
+})
 // 组件挂载完毕
 onMounted(() => {
   getHomeGoodsGuessLikeData()
