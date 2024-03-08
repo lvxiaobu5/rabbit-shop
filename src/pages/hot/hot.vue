@@ -33,7 +33,6 @@ const getHotRecommendData = async () => {
     page: import.meta.env.DEV ? 30 : 1,
     pageSize: 10,
   })
-  console.log(5, res.result.title)
   bannerPicture.value = res.result.bannerPicture
   subTypes.value = res.result.subTypes
 }
@@ -41,7 +40,6 @@ const getHotRecommendData = async () => {
 const onScrolltolower = async () => {
   // 获取当前选项
   const curSubType = subTypes.value[activeIndex.value]
-  console.log(6, curSubType)
   // 分页条件
   if (curSubType.goodsItems.page < curSubType.goodsItems.pages) {
     // 当前页码累加
@@ -58,7 +56,6 @@ const onScrolltolower = async () => {
     page: curSubType.goodsItems.page,
     pageSize: curSubType.goodsItems.pageSize,
   })
-  console.log(7, res)
   // 新的列表选项
   const newSubType = res.result.subTypes[activeIndex.value]
   // 数组追加

@@ -10,7 +10,6 @@ const getData = async () => {
     url: '/home/banner',
     header: {},
   })
-  console.log('请求成功', res)
 }
 </script>
 

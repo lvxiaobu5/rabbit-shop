@@ -5,12 +5,10 @@ import type { BannerItem } from '@/types/home'
 const props = defineProps<{
   list: BannerItem[]
 }>()
-console.log(2, props)
 const activeIndex = ref(0)
 
 // 当swiper下标发生变化时触发
 const onChange: UniHelper.SwiperOnChange = (ev) => {
-  console.log(ev.detail.current)
   // !.就是非空断言，主观上排除掉undefined空值的情况，即ev.detail一定是有值的
   activeIndex.value = ev.detail!.current
 }

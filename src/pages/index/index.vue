@@ -18,7 +18,6 @@ const isLoading = ref(false)
 // 获取轮播图数据
 const getHomeBannerData = async () => {
   const res = await getHomeBannerAPI()
-  console.log(1, res)
   bannerList.value = res.result
 }
 // 获取前台分类数据
@@ -33,7 +32,6 @@ const getHomeHotData = async () => {
 }
 // 滚动触底
 const onScrolltolower = () => {
-  console.log('触底')
   guessRef.value?.getMore()
 }
 // 自定义下拉刷新被触发
