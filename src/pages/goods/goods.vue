@@ -7,6 +7,14 @@ import { ref } from 'vue'
 // 对象类型的初始化推荐用空，不能写空对象，否则报错，因为空对象无任何属性
 const goods = ref<GoodsResult>()
 const currentIndex = ref(0)
+// Vue3的组合式API这样使用而不是选项式API：this.$refs.popup
+// 当组件挂载完毕时会自动把组件实例保存给当前popup变量，弹出层组件ref
+const popup = ref<{
+  open: (type?: UniHelper.UniPopupType) => void
+  close: () => void
+}>()
+// 弹出层条件渲染
+const popupName = ref<'address' | 'service'>()
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
 // 接收页面参数
@@ -29,6 +37,11 @@ const onTapImage = (url: string) => {
     current: url,
     urls: goods.value!.mainPictures,
   })
+}
+const openPopup = (name: typeof popupName.value) => {
+  // 修改弹出层名称
+  popupName.value = name
+  popup.value?.open()
 }
 onLoad(() => {
   getGoodsByIdData()
@@ -73,7 +86,7 @@ onLoad(() => {
           <text class="label">送至</text>
           <text class="text ellipsis"> 请选择收获地址 </text>
         </view>
-        <view class="item arrow">
+        <view @tap="openPopup('service')" class="item arrow">
           <text class="label">服务</text>
           <text class="text ellipsis"> 无忧退 快速退款 免费包邮 </text>
         </view>
@@ -143,6 +156,13 @@ onLoad(() => {
       <view class="buynow"> 立即购买 </view>
     </view>
   </view>
+
+  <!-- uni-弹出层 -->
+  <uni-popup ref="popup" type="bottom" background-color="#fff">
+    <view>内容1</view>
+    <view>内容2</view>
+    <button @tap="popup?.close()">关闭弹出层</button>
+  </uni-popup>
 </template>
 
 <style lang="scss">
