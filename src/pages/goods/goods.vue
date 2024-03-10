@@ -6,6 +6,7 @@ import { ref } from 'vue'
 
 // 对象类型的初始化推荐用空，不能写空对象，否则报错，因为空对象无任何属性
 const goods = ref<GoodsResult>()
+const currentIndex = ref(0)
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
 // 接收页面参数
@@ -17,7 +18,18 @@ const getGoodsByIdData = async () => {
   const res = await getGoodsByIdAPI(query.id)
   goods.value = res.result
 }
-console.log(2, query)
+// 轮播图切换时触发
+const onChange: UniHelper.SwiperOnChange = (ev) => {
+  currentIndex.value = ev.detail!.current
+}
+// 点击图片触发
+const onTapImage = (url: string) => {
+  // 大图预览
+  uni.previewImage({
+    current: url,
+    urls: goods.value!.mainPictures,
+  })
+}
 onLoad(() => {
   getGoodsByIdData()
 })
@@ -29,15 +41,15 @@ onLoad(() => {
     <view class="goods">
       <!-- 商品主图 -->
       <view class="preview">
-        <swiper circular>
+        <swiper @change="onChange" circular>
           <swiper-item v-for="item in goods?.mainPictures" :key="item">
-            <image mode="aspectFill" :src="item" />
+            <image @tap="onTapImage(item)" mode="aspectFill" :src="item" />
           </swiper-item>
         </swiper>
         <view class="indicator">
-          <text class="current">1</text>
+          <text class="current">{{ currentIndex + 1 }}</text>
           <text class="split">/</text>
-          <text class="total">5</text>
+          <text class="total">{{ goods?.mainPictures.length }}</text>
         </view>
       </view>
 
