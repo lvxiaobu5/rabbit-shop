@@ -26,6 +26,10 @@
     {
       "path": "pages/my/my",
       "style": {
+        // 改成自定义导航栏
+        "navigationStyle": "custom",
+        // 必须写字符串white不能写#fff
+        "navigationBarTextStyle": "white",
         "navigationBarTitleText": "我的"
       }
     },
