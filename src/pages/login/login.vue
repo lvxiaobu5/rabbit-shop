@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useMemberStore } from '@/stores/index'
+import type { LoginResult } from '@/types/member'
 import { onLoad } from '@dcloudio/uni-app'
 import { postLoginWxMinAPI, postLoginWxMinSimpleAPI } from '../../services/login'
 
@@ -12,13 +14,26 @@ const onGetphonenumber: UniHelper.ButtonOnGetphonenumber = async (ev) => {
     encryptedData,
     iv,
   })
-  console.log('企业获取手机号登录', res)
+  loginSuccess(res.result)
 }
 // 模拟手机号快捷登录（个人开发的写法）
 const onGetphonenumberSimple = async () => {
   const res = await postLoginWxMinSimpleAPI('17820686622')
-  uni.showToast({ icon: 'success', title: '登录成功' })
+  loginSuccess(res.result)
 }
+// 生产和开发环境封装为统一
+const loginSuccess = (profile: LoginResult) => {
+  // 保存会员信息
+  const memberStore = useMemberStore()
+  memberStore.setProfile(profile)
+  uni.showToast({ icon: 'success', title: '登录成功' })
+  setTimeout(() => {
+    // 页面跳转，navigateTo只能跳转到普通页面
+    // 跳转到tabBar页面只能使用switchTab跳转，并关闭其他所有非tabBar页面
+    uni.switchTab({ url: '/pages/my/my' })
+  }, 500)
+}
+
 onLoad(async () => {
   // 微信官方提供的API
   const res = await wx.login()
