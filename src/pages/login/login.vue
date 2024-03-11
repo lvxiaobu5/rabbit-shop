@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onLoad } from '@dcloudio/uni-app'
-import { postLoginWxMinAPI } from '../../services/login'
+import { postLoginWxMinAPI, postLoginWxMinSimpleAPI } from '../../services/login'
 
 // 获取code登录凭证，encryptedData和iv仅对企业开放，不对个人开放
 let code = ''
@@ -12,6 +12,12 @@ const onGetphonenumber: UniHelper.ButtonOnGetphonenumber = async (ev) => {
     encryptedData,
     iv,
   })
+  console.log('企业获取手机号登录', res)
+}
+// 模拟手机号快捷登录（个人开发的写法）
+const onGetphonenumberSimple = async () => {
+  const res = await postLoginWxMinSimpleAPI('17820686622')
+  uni.showToast({ icon: 'success', title: '登录成功' })
 }
 onLoad(async () => {
   // 微信官方提供的API
@@ -44,7 +50,7 @@ onLoad(async () => {
         </view>
         <view class="options">
           <!-- 通用模拟登录 -->
-          <button>
+          <button @tap="onGetphonenumberSimple">
             <text class="icon icon-phone">模拟快捷登录</text>
           </button>
         </view>
