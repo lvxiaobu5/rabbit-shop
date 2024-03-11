@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { useMemberStore } from '@/stores/index'
+import { ref } from 'vue'
+import { useGuessList } from '../../composables/index'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
+// 从store中获取会员信息
+const memberStore = useMemberStore()
 // 订单选项
 const orderTypes = [
   { type: 1, text: '待付款', icon: 'icon-currency' },
@@ -11,12 +15,16 @@ const orderTypes = [
   { type: 4, text: '待评价', icon: 'icon-comment' },
 ]
 
-// 从store中获取会员信息
-const memberStore = useMemberStore()
+// 滚动触底调用，封装到组合式函数中
+// const onScrolltolower = () => {
+//   guessRef.value?.getMore()
+// }
+// 把组合式函数调用后的返回结果结构出来即可使用
+const { guessRef, onScrolltolower } = useGuessList()
 </script>
 
 <template>
-  <scroll-view class="viewport" scroll-y enable-back-to-top>
+  <scroll-view @scrolltolower="onScrolltolower" class="viewport" scroll-y enable-back-to-top>
     <!-- 个人资料 -->
     <view class="profile" :style="{ paddingTop: safeAreaInsets.top + 'px' }">
       <!-- 情况1：已登录 -->
@@ -81,7 +89,7 @@ const memberStore = useMemberStore()
     </view>
     <!-- 猜你喜欢 -->
     <view class="guess">
-      <XtxGuess ref="guessRef" />
+      <Xtx-Guess ref="guessRef" />
     </view>
   </scroll-view>
 </template>

@@ -7,12 +7,13 @@ import { getHomeBannerAPI, getHomeCategoryAPI, getHomeHotAPI } from '../../servi
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import type { BannerItem, CategoryItem, HotItem } from '@/types/home'
-import type { XtxGuessInstance } from '@/types/components'
+// import type { XtxGuessInstance } from '@/types/components'
+import { useGuessList } from '@/composables/index'
 
 const bannerList = ref<BannerItem[]>([])
 const categoryList = ref<CategoryItem[]>([])
 const hotList = ref<HotItem[]>([])
-const guessRef = ref<XtxGuessInstance>()
+// const guessRef = ref<XtxGuessInstance>()
 const isTriggered = ref(false)
 const isLoading = ref(false)
 // 获取轮播图数据
@@ -30,10 +31,11 @@ const getHomeHotData = async () => {
   const res = await getHomeHotAPI()
   hotList.value = res.result
 }
-// 滚动触底
-const onScrolltolower = () => {
-  guessRef.value?.getMore()
-}
+// 滚动触底调用，封装到组合式函数中
+// const onScrolltolower = () => {
+//   guessRef.value?.getMore()
+// }
+const { guessRef, onScrolltolower } = useGuessList()
 // 自定义下拉刷新被触发
 const onRefresherrefresh = async () => {
   // 开启...加载中动画
