@@ -11,6 +11,7 @@
       "^Xtx-(.*)": "@/components/Xtx-$1.vue"
     }
   },
+  // 设置页面路径及窗口表现（主包）
   "pages": [
     //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
     {
@@ -102,5 +103,29 @@
         "selectedIconPath": "static/tabs/user_selected.png"
       }
     ]
+  },
+  // 分包加载配置
+  "subPackages": [
+    {
+      // 子包的根目录
+      "root": "pagesMember",
+      // 子包由哪些页面组成，参数同 pages
+      "pages": [
+        {
+          "path": "settings/settings",
+          "style": {
+            "navigationBarTitleText": "设置"
+          }
+        }
+      ]
+    }
+  ],
+  // 分包预下载规则
+  "preloadRule": {
+    // 进入该页面会由框架自动预下载可能需要的分包
+    "pages/my/my": {
+      "network": "all",
+      "packages": ["pagesMember"]
+    }
   }
 }
