@@ -2,7 +2,7 @@
 import { getMemberProfileAPI, putMemberProfileAPI } from '../../services/profile'
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
-import type { ProfileDetail } from '@/types/member'
+import type { Gender, ProfileDetail } from '@/types/member'
 import { useMemberStore } from '@/stores/index'
 
 // 个人信息，修改个人信息需要提供初始值，防止修改时出现双向绑定错误
@@ -49,14 +49,19 @@ const onAvatarChange = () => {
     },
   })
 }
+// 修改日期
 const onDateChange: UniHelper.DatePickerOnChange = (ev) => {
-  console.log(1, ev.detail)
   profile.value.birthday = ev.detail.value
+}
+// 修改性别
+const onGenderChange: UniHelper.RadioGroupOnChange = (ev) => {
+  profile.value.gender = ev.detail.value as Gender
 }
 // 点击保存提交表单
 const onSubmit = async () => {
   const res = await putMemberProfileAPI({
     nickname: profile.value?.nickname,
+    gender: profile.value.gender,
   })
   // 更新store中的昵称
   memberStore.profile!.nickname = res.result.nickname
@@ -99,7 +104,7 @@ onLoad(() => {
         </view>
         <view class="form-item">
           <text class="label">性别</text>
-          <radio-group>
+          <radio-group @change="onGenderChange">
             <label class="radio">
               <radio value="男" color="#27ba9b" :checked="profile?.gender === '男'" />
               男
