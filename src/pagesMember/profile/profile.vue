@@ -7,6 +7,8 @@ import { useMemberStore } from '@/stores/index'
 
 // 个人信息，修改个人信息需要提供初始值，防止修改时出现双向绑定错误
 const profile = ref({} as ProfileDetail)
+// 城市数据
+let fullLocationCode: [string, string, string] = ['', '', '']
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
 const memberStore = useMemberStore()
@@ -49,13 +51,19 @@ const onAvatarChange = () => {
     },
   })
 }
+// 修改性别
+const onGenderChange: UniHelper.RadioGroupOnChange = (ev) => {
+  profile.value.gender = ev.detail.value as Gender
+}
 // 修改生日
 const onBirthdayChange: UniHelper.DatePickerOnChange = (ev) => {
   profile.value.birthday = ev.detail.value
 }
-// 修改性别
-const onGenderChange: UniHelper.RadioGroupOnChange = (ev) => {
-  profile.value.gender = ev.detail.value as Gender
+// 修改城市
+const onFullLocationChange: UniHelper.RegionPickerOnChange = (ev) => {
+  // 修改前端页面数据
+  profile.value.fullLocation = ev.detail.value.join(' ')
+  fullLocationCode = ev.detail.code!
 }
 // 点击保存提交表单
 const onSubmit = async () => {
@@ -64,6 +72,9 @@ const onSubmit = async () => {
     nickname,
     gender,
     birthday,
+    provinceCode: fullLocationCode[0],
+    cityCode: fullLocationCode[1],
+    countyCode: fullLocationCode[2],
   })
   // 更新store中的昵称
   memberStore.profile!.nickname = res.result.nickname
@@ -133,7 +144,12 @@ onLoad(() => {
         </view>
         <view class="form-item">
           <text class="label">城市</text>
-          <picker class="picker" mode="region" :value="profile?.fullLocation?.split(' ')">
+          <picker
+            @change="onFullLocationChange"
+            class="picker"
+            mode="region"
+            :value="profile?.fullLocation?.split(' ')"
+          >
             <view v-if="profile?.fullLocation">{{ profile?.fullLocation }}</view>
             <view class="placeholder" v-else>请选择城市</view>
           </picker>
