@@ -49,8 +49,8 @@ const onAvatarChange = () => {
     },
   })
 }
-// 修改日期
-const onDateChange: UniHelper.DatePickerOnChange = (ev) => {
+// 修改生日
+const onBirthdayChange: UniHelper.DatePickerOnChange = (ev) => {
   profile.value.birthday = ev.detail.value
 }
 // 修改性别
@@ -59,9 +59,11 @@ const onGenderChange: UniHelper.RadioGroupOnChange = (ev) => {
 }
 // 点击保存提交表单
 const onSubmit = async () => {
+  const { nickname, gender, birthday } = profile.value
   const res = await putMemberProfileAPI({
-    nickname: profile.value?.nickname,
-    gender: profile.value.gender,
+    nickname,
+    gender,
+    birthday,
   })
   // 更新store中的昵称
   memberStore.profile!.nickname = res.result.nickname
@@ -123,7 +125,7 @@ onLoad(() => {
             start="1900-01-01"
             :end="new Date()"
             :value="profile?.birthday"
-            @change="onDateChange"
+            @change="onBirthdayChange"
           >
             <view v-if="profile?.birthday">{{ profile?.birthday }}</view>
             <view class="placeholder" v-else>请选择日期</view>
