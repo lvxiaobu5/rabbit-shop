@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { getMemberProfileAPI } from '../../services/profile'
+import { getMemberProfileAPI, putMemberProfileAPI } from '../../services/profile'
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import type { ProfileDetail } from '@/types/member'
 
-// 个人信息
-const profile = ref<ProfileDetail>()
+// 个人信息，修改个人信息需要提供初始值，防止修改时出现双向绑定错误
+const profile = ref({} as ProfileDetail)
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
 
@@ -44,6 +44,17 @@ const onAvatarChange = () => {
     },
   })
 }
+const onDateChange: UniHelper.DatePickerOnChange = (ev) => {
+  console.log(1, ev.detail)
+  profile.value.birthday = ev.detail.value
+}
+// 点击保存提交表单
+const onSubmit = async () => {
+  const res = await putMemberProfileAPI({
+    nickname: profile.value?.nickname,
+  })
+  uni.showToast({ icon: 'success', title: '保存成功' })
+}
 onLoad(() => {
   getMemberProfileData()
 })
@@ -73,7 +84,7 @@ onLoad(() => {
         </view>
         <view class="form-item">
           <text class="label">昵称</text>
-          <input :value="profile?.nickname" class="input" type="text" placeholder="请填写昵称" />
+          <input v-model="profile.nickname" class="input" type="text" placeholder="请填写昵称" />
         </view>
         <view class="form-item">
           <text class="label">性别</text>
@@ -96,6 +107,7 @@ onLoad(() => {
             start="1900-01-01"
             :end="new Date()"
             :value="profile?.birthday"
+            @change="onDateChange"
           >
             <view v-if="profile?.birthday">{{ profile?.birthday }}</view>
             <view class="placeholder" v-else>请选择日期</view>
@@ -114,7 +126,7 @@ onLoad(() => {
         </view>
       </view>
       <!-- 提交按钮 -->
-      <button class="form-button">保 存</button>
+      <button @tap="onSubmit" class="form-button">保 存</button>
     </view>
   </view>
 </template>
