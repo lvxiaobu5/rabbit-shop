@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getMemberAddressAPI } from '../../services/address'
+import { deleteMemberAddressByIdAPI, getMemberAddressAPI } from '../../services/address'
 import { onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import type { AddressItem } from '../../types/address'
@@ -10,6 +10,19 @@ const addressList = ref<AddressItem[]>([])
 const getMemberAddressData = async () => {
   const res = await getMemberAddressAPI()
   addressList.value = res.result
+}
+// 删除收货地址
+const onDeleteAddress = (id: string) => {
+  // 二次确认
+  uni.showModal({
+    content: '是否确认删除地址？',
+    success: async (res) => {
+      if (res.confirm) {
+        await deleteMemberAddressByIdAPI(id)
+        getMemberAddressData()
+      }
+    },
+  })
 }
 // 初始化调用，不能使用onLoad，onLoad仅在页面初始化时调用一次
 // 当新建修改后返回当前页将不会再次调用onLoad
@@ -22,10 +35,10 @@ onShow(() => {
   <view class="viewport">
     <!-- 地址列表 -->
     <scroll-view class="scroll-view" scroll-y>
-      <view v-if="true" class="address">
-        <view class="address-list">
+      <view v-if="addressList.length" class="address">
+        <uni-swipe-action class="address-list">
           <!-- 收货地址项 -->
-          <view v-for="item in addressList" :key="item.id" class="item">
+          <uni-swipe-action-item v-for="item in addressList" :key="item.id" class="item">
             <view class="item-content">
               <view class="user">
                 {{ item.receiver }}
@@ -41,8 +54,12 @@ onShow(() => {
                 修改
               </navigator>
             </view>
-          </view>
-        </view>
+            <!-- 右侧插槽 -->
+            <template #right>
+              <button @tap="onDeleteAddress(item.id)" class="delete-button">删除</button>
+            </template>
+          </uni-swipe-action-item>
+        </uni-swipe-action>
       </view>
       <view v-else class="blank">暂无收货地址</view>
     </scroll-view>
