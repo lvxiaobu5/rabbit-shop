@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { postMemberAddressAPI } from '../../services/address'
+import { getMemberAddressByIdAPI, postMemberAddressAPI } from '../../services/address'
+import { onLoad } from '@dcloudio/uni-app'
 
 // 表单数据
 const form = ref({
@@ -17,9 +18,18 @@ const form = ref({
 const query = defineProps<{
   id?: string
 }>()
+// 获取收货地址详情数据
+const getMemberAddressByIdData = async () => {
+  if (query.id) {
+    // 发送地址详情请求
+    const res = await getMemberAddressByIdAPI(query.id)
+    // 把数据合并到表单中
+    Object.assign(form.value, res.result)
+  }
+}
 // 动态设置页面标题
 uni.setNavigationBarTitle({ title: query.id ? '修改地址' : '新建地址' })
-// 所在地区
+// 保存所在地区
 const onRegionChange: UniHelper.RegionPickerOnChange = (ev) => {
   form.value.fullLocation = ev.detail.value.join(' ')
   // 保存省市区参数
@@ -42,6 +52,9 @@ const onSubmit = async () => {
     uni.navigateBack()
   }, 500)
 }
+onLoad(() => {
+  getMemberAddressByIdData()
+})
 </script>
 
 <template>
@@ -74,7 +87,12 @@ const onSubmit = async () => {
       </view>
       <view class="form-item">
         <label class="label">设为默认地址</label>
-        <switch @change="onSwitchChange" class="switch" color="#27ba9b" :checked="true" />
+        <switch
+          @change="onSwitchChange"
+          class="switch"
+          color="#27ba9b"
+          :checked="form.isDefault === 1"
+        />
       </view>
     </form>
   </view>
