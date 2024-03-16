@@ -5,6 +5,7 @@ import type { GoodsResult } from '@/types/goods'
 import { ref } from 'vue'
 import AddressPanel from './components/AddressPanel'
 import ServicePanel from './components/ServicePanel'
+import { SkuPopupLocaldata } from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup'
 
 // 对象类型的初始化推荐用空，不能写空对象，否则报错，因为空对象无任何属性
 const goods = ref<GoodsResult>()
@@ -17,6 +18,10 @@ const popup = ref<{
 }>()
 // 弹出层条件渲染
 const popupName = ref<'address' | 'service'>()
+// 是否显示SKU组件
+const isShowSku = ref(false)
+// 商品信息数据
+const localdata = ref({} as SkuPopupLocaldata)
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
 // 接收页面参数
@@ -27,6 +32,31 @@ const query = defineProps<{
 const getGoodsByIdData = async () => {
   const res = await getGoodsByIdAPI(query.id)
   goods.value = res.result
+  // 转成SKU组件所需格式
+  localdata.value = {
+    _id: res.result.id,
+    name: res.result.name,
+    goods_thumb: res.result.mainPictures[0],
+    // 全部商品规格（包括无货不可选商品）的数据渲染
+    spec_list: res.result.specs.map((v) => {
+      return {
+        name: v.name,
+        list: v.values,
+      }
+    }),
+    // 全部有货商品的数据渲染
+    sku_list: res.result.skus.map((v) => {
+      return {
+        _id: v.id,
+        goods_id: res.result.id,
+        goods_name: res.result.name,
+        image: v.picture,
+        price: v.price * 100, // 插件要求价格乘以100才是原价
+        stock: v.inventory,
+        sku_name_arr: v.specs.map((vv) => vv.valueName),
+      }
+    }),
+  }
 }
 // 轮播图切换时触发
 const onChange: UniHelper.SwiperOnChange = (ev) => {
@@ -51,6 +81,8 @@ onLoad(() => {
 </script>
 
 <template>
+  <!-- SKU弹窗组件 -->
+  <vk-data-goods-sku-popup :localdata="localdata" v-model="isShowSku" />
   <scroll-view scroll-y class="viewport">
     <!-- 基本信息 -->
     <view class="goods">
@@ -80,7 +112,7 @@ onLoad(() => {
 
       <!-- 操作面板 -->
       <view class="action">
-        <view class="item arrow">
+        <view @tap="isShowSku = true" class="item arrow">
           <text class="label">选择</text>
           <text class="text ellipsis"> 请选择商品规格 </text>
         </view>
