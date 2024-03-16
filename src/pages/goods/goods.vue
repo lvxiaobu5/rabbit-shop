@@ -7,6 +7,12 @@ import AddressPanel from './components/AddressPanel'
 import ServicePanel from './components/ServicePanel'
 import { SkuPopupLocaldata } from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup'
 
+enum SkuMode {
+  Both = 1,
+  Cart = 2,
+  Buy = 3,
+}
+
 // 对象类型的初始化推荐用空，不能写空对象，否则报错，因为空对象无任何属性
 const goods = ref<GoodsResult>()
 const currentIndex = ref(0)
@@ -22,6 +28,8 @@ const popupName = ref<'address' | 'service'>()
 const isShowSku = ref(false)
 // 商品信息数据
 const localdata = ref({} as SkuPopupLocaldata)
+// SKU弹窗下面按钮的模式
+const mode = ref<SkuMode>(SkuMode.Both)
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
 // 接收页面参数
@@ -70,10 +78,18 @@ const onTapImage = (url: string) => {
     urls: goods.value!.mainPictures,
   })
 }
+// 打开收货地址或服务弹窗
 const openPopup = (name: typeof popupName.value) => {
   // 修改弹出层名称
   popupName.value = name
   popup.value?.open()
+}
+// 打开Sku弹窗修改按钮模式
+const openSkuPopup = (val: SkuMode) => {
+  // 显示Sku组件
+  isShowSku.value = true
+  // 修改按钮模式
+  mode.value = val
 }
 onLoad(() => {
   getGoodsByIdData()
@@ -82,7 +98,13 @@ onLoad(() => {
 
 <template>
   <!-- SKU弹窗组件 -->
-  <vk-data-goods-sku-popup :localdata="localdata" v-model="isShowSku" />
+  <vk-data-goods-sku-popup
+    :localdata="localdata"
+    :mode="mode"
+    v-model="isShowSku"
+    add-cart-background-color="#FFA868"
+    buy-now-background-color="#27BA9B"
+  />
   <scroll-view scroll-y class="viewport">
     <!-- 基本信息 -->
     <view class="goods">
@@ -112,7 +134,7 @@ onLoad(() => {
 
       <!-- 操作面板 -->
       <view class="action">
-        <view @tap="isShowSku = true" class="item arrow">
+        <view @tap="openSkuPopup(SkuMode.Both)" class="item arrow">
           <text class="label">选择</text>
           <text class="text ellipsis"> 请选择商品规格 </text>
         </view>
@@ -186,8 +208,8 @@ onLoad(() => {
       </navigator>
     </view>
     <view class="buttons">
-      <view class="addcart"> 加入购物车 </view>
-      <view class="buynow"> 立即购买 </view>
+      <view @tap="openSkuPopup(SkuMode.Cart)" class="addcart"> 加入购物车 </view>
+      <view @tap="openSkuPopup(SkuMode.Buy)" class="buynow"> 立即购买 </view>
     </view>
   </view>
 
