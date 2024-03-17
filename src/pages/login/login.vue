@@ -30,7 +30,7 @@ const loginSuccess = (profile: LoginResult) => {
   setTimeout(() => {
     // 页面跳转，navigateTo只能跳转到普通页面
     // 跳转到tabBar页面只能使用switchTab跳转，并关闭其他所有非tabBar页面
-    uni.switchTab({ url: '/pages/my/my' })
+    uni.navigateBack()
   }, 500)
 }
 
