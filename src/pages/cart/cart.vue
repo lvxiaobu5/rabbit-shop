@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { useMemberStore } from '../../stores/modules/member'
-import { deleteMemberCartAPI, getMemberCartAPI } from '../../services/cart'
+import { deleteMemberCartAPI, getMemberCartAPI, putMemberCartBySkuIdAPI } from '../../services/cart'
 import { onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import type { CartItem } from '@/types/cart'
+import type { InputNumberBoxEvent } from '@/components/vk-data-input-number-box/vk-data-input-number-box'
 
 // 购物车数据
 const cartList = ref<CartItem[]>()
@@ -20,7 +21,6 @@ const onDeleteCart = (skuId: string) => {
   uni.showModal({
     content: '是否确认删除',
     success: async (res) => {
-      console.log(res, skuId)
       if (res.confirm) {
         await deleteMemberCartAPI({ ids: [skuId] })
         uni.showToast({ icon: 'success', title: '删除成功' })
@@ -28,6 +28,10 @@ const onDeleteCart = (skuId: string) => {
       }
     },
   })
+}
+// 修改商品数量
+const onChangeCount = async (ev: InputNumberBoxEvent) => {
+  await putMemberCartBySkuIdAPI(ev.index, { count: ev.value })
 }
 // 初始化调用，onLoad在页面返回时不加载，不适用，用onShow页面显示就会触发
 onShow(() => {
@@ -70,9 +74,13 @@ onShow(() => {
               </navigator>
               <!-- 商品数量 -->
               <view class="count">
-                <text class="text">-</text>
-                <input class="input" type="number" :value="item.count.toString()" />
-                <text class="text">+</text>
+                <vk-data-input-number-box
+                  v-model="item.count"
+                  :min="1"
+                  :max="item.stock"
+                  :index="item.skuId"
+                  @change="onChangeCount"
+                />
               </view>
             </view>
             <!-- 右侧删除按钮 -->
