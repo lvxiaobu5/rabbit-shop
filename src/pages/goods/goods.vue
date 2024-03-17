@@ -104,7 +104,7 @@ const selectArrText = computed(() => {
 })
 // 加入购物车
 const onAddCart = async (ev: SkuPopupEvent) => {
-  const res = await postMemberCartAPI({ skuId: ev._id, count: ev.buy_num })
+  await postMemberCartAPI({ skuId: ev._id, count: ev.buy_num })
   uni.showToast({ icon: 'success', title: '加入购物车成功' })
   isShowSku.value = false
 }

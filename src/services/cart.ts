@@ -16,3 +16,11 @@ export const getMemberCartAPI = () => {
     url: '/member/cart',
   })
 }
+// 删除/清空购物车列表
+export const deleteMemberCartAPI = (data: { ids: string[] }) => {
+  return http<CartItem[]>({
+    method: 'DELETE',
+    url: '/member/cart',
+    data,
+  })
+}
