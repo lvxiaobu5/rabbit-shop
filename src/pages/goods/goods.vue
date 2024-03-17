@@ -2,10 +2,13 @@
 import { getGoodsByIdAPI } from '../../services/goods'
 import { onLoad } from '@dcloudio/uni-app'
 import type { GoodsResult } from '@/types/goods'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import AddressPanel from './components/AddressPanel'
 import ServicePanel from './components/ServicePanel'
-import { SkuPopupLocaldata } from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup'
+import {
+  SkuPopupInstance,
+  SkuPopupLocaldata,
+} from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup'
 
 enum SkuMode {
   Both = 1,
@@ -30,6 +33,8 @@ const isShowSku = ref(false)
 const localdata = ref({} as SkuPopupLocaldata)
 // SKU弹窗下面按钮的模式
 const mode = ref<SkuMode>(SkuMode.Both)
+// SKU组件实例
+const skuPopupRef = ref<SkuPopupInstance>()
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
 // 接收页面参数
@@ -91,6 +96,10 @@ const openSkuPopup = (val: SkuMode) => {
   // 修改按钮模式
   mode.value = val
 }
+// 计算被选中的值
+const selectArrText = computed(() => {
+  return skuPopupRef.value?.selectArr?.join(' ').trim() || '请选择商品规格'
+})
 onLoad(() => {
   getGoodsByIdData()
 })
@@ -99,11 +108,17 @@ onLoad(() => {
 <template>
   <!-- SKU弹窗组件 -->
   <vk-data-goods-sku-popup
+    ref="skuPopupRef"
     :localdata="localdata"
     :mode="mode"
     v-model="isShowSku"
     add-cart-background-color="#FFA868"
     buy-now-background-color="#27BA9B"
+    :actived-style="{
+      color: '#27BA9B',
+      borderColor: '#27BA9B',
+      backgroundColor: '#E9F8F5',
+    }"
   />
   <scroll-view scroll-y class="viewport">
     <!-- 基本信息 -->
@@ -136,7 +151,7 @@ onLoad(() => {
       <view class="action">
         <view @tap="openSkuPopup(SkuMode.Both)" class="item arrow">
           <text class="label">选择</text>
-          <text class="text ellipsis"> 请选择商品规格 </text>
+          <text class="text ellipsis">{{ selectArrText }}</text>
         </view>
         <view @tap="openPopup('address')" class="item arrow">
           <text class="label">送至</text>
