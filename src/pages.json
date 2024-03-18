@@ -144,6 +144,19 @@
           }
         }
       ]
+    },
+    {
+      // 子包的根目录
+      "root": "pagesOrder",
+      // 子包由哪些页面组成，参数同 pages
+      "pages": [
+        {
+          "path": "create/create",
+          "style": {
+            "navigationBarTitleText": "填写订单"
+          }
+        }
+      ]
     }
   ],
   // 分包预下载规则

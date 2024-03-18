@@ -83,8 +83,8 @@ const gotoPayment = () => {
   if (selectedCartListCount.value === 0) {
     return uni.showToast({ icon: 'none', title: '请选择商品' })
   }
-  // 跳转到结算页
-  uni.showToast({ icon: 'none', title: '待完成' })
+  // 跳转到结算页，url一定要以/开头，否则报错
+  uni.navigateTo({ url: '/pagesOrder/create/create' })
 }
 // 初始化调用，onLoad在页面返回时不加载，不适用，用onShow页面显示就会触发
 onShow(() => {
