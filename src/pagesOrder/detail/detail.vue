@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { useGuessList } from '@/composables'
 import { ref } from 'vue'
+import { onLoad, onReady } from '@dcloudio/uni-app'
 
-// 获取屏幕边界到安全区域距离
-const { safeAreaInsets } = uni.getSystemInfoSync()
-// 猜你喜欢
-const { guessRef, onScrolltolower } = useGuessList()
 // 弹出层组件
 const popup = ref<UniHelper.UniPopupInstance>()
 // 取消原因列表
@@ -19,6 +16,14 @@ const reasonList = ref([
 ])
 // 订单取消原因
 const reason = ref('')
+// 获取屏幕边界到安全区域距离
+const { safeAreaInsets } = uni.getSystemInfoSync()
+// 猜你喜欢
+const { guessRef, onScrolltolower } = useGuessList()
+// 获取页面栈
+const pages = getCurrentPages()
+// 获取当前页面实例，数组最后一项
+const pageInstance = pages.at(-1) as any
 // 复制内容
 const onCopy = (id: string) => {
   // 设置系统剪贴板的内容
@@ -28,13 +33,47 @@ const onCopy = (id: string) => {
 const query = defineProps<{
   id: string
 }>()
+// 页面渲染完毕，绑定动画效果
+onReady(() => {
+  // 动画效果，导航栏背景色
+  // 动画效果,导航栏背景色
+  pageInstance.animate(
+    '.navbar',
+    [{ backgroundColor: 'transparent' }, { backgroundColor: '#f8f8f8' }],
+    1000,
+    {
+      scrollSource: '#scroller',
+      timeRange: 1000,
+      startScrollOffset: 0,
+      endScrollOffset: 50,
+    },
+  )
+  // 动画效果,导航栏标题
+  pageInstance.animate('.navbar .title', [{ color: 'transparent' }, { color: '#000' }], 1000, {
+    scrollSource: '#scroller',
+    timeRange: 1000,
+    startScrollOffset: 0,
+    endScrollOffset: 50,
+  })
+  // 动画效果,导航栏返回按钮
+  pageInstance.animate('.navbar .back', [{ color: '#fff' }, { color: '#000' }], 1000, {
+    scrollSource: '#scroller',
+    timeRange: 1000,
+    startScrollOffset: 0,
+    endScrollOffset: 50,
+  })
+})
 </script>
 
 <template>
   <!-- 自定义导航栏: 默认透明不可见, scroll-view 滚动到 50 时展示 -->
   <view class="navbar" :style="{ paddingTop: safeAreaInsets?.top + 'px' }">
     <view class="wrap">
-      <navigator v-if="true" open-type="navigateBack" class="back icon-left"></navigator>
+      <navigator
+        v-if="pages.length > 1"
+        open-type="navigateBack"
+        class="back icon-left"
+      ></navigator>
       <navigator v-else url="/pages/index/index" open-type="switchTab" class="back icon-home">
       </navigator>
       <view class="title">订单详情</view>
