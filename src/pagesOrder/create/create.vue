@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { getMemberOrderPreAPI } from '@/services/order'
+import { getMemberOrderPreAPI, getMemberOrderPreNowAPI } from '@/services/order'
 import { onLoad } from '@dcloudio/uni-app'
 import type { OrderPreResult } from '../../types/order'
 import type { AddressItem } from '../../types/address'
 import { useAddressStore } from '@/stores/modules/address'
 
-// 获取屏幕边界到安全区域距离
-const { safeAreaInsets } = uni.getSystemInfoSync()
 // 订单备注
 const buyerMessage = ref('')
 // 配送时间
@@ -20,7 +18,14 @@ const deliveryList = ref([
 const activeIndex = ref(0)
 // 订单信息数据
 const orderPre = ref<OrderPreResult>()
+// 获取屏幕边界到安全区域距离
+const { safeAreaInsets } = uni.getSystemInfoSync()
 const addressStore = useAddressStore()
+// url路径参数
+const query = defineProps<{
+  skuId?: string
+  count?: string
+}>()
 // 当前配送时间
 const activeDelivery = computed(() => deliveryList.value[activeIndex.value])
 // 收货地址
@@ -36,8 +41,16 @@ const onChangeDelivery: UniHelper.SelectorPickerOnChange = (ev) => {
 }
 // 获取订单信息
 const getMemberOrderPreData = async () => {
-  const res = await getMemberOrderPreAPI()
-  orderPre.value = res.result
+  if (query.skuId && query.count) {
+    const res = await getMemberOrderPreNowAPI({
+      skuId: query.skuId,
+      count: query.count,
+    })
+    orderPre.value = res.result
+  } else {
+    const res = await getMemberOrderPreAPI()
+    orderPre.value = res.result
+  }
 }
 onLoad(() => {
   getMemberOrderPreData()
