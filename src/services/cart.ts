@@ -31,11 +31,19 @@ export const deleteMemberCartAPI = (data: { ids: string[] }) => {
  */
 export const putMemberCartBySkuIdAPI = (
   skuId: string,
-  data: { selected?: string; count?: number },
+  data: { selected?: boolean; count?: number },
 ) => {
   return http({
     method: 'PUT',
     url: `/member/cart/${skuId}`,
+    data,
+  })
+}
+// 购物车全选/取消全选
+export const putMemberCartSelectedAPI = (data: { selected?: boolean }) => {
+  return http({
+    method: 'PUT',
+    url: `/member/cart/selected`,
     data,
   })
 }
