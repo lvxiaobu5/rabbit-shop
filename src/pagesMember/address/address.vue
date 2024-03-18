@@ -2,7 +2,8 @@
 import { deleteMemberAddressByIdAPI, getMemberAddressAPI } from '../../services/address'
 import { onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
-import type { AddressItem } from '../../types/address'
+import type { AddressItem } from '@/types/address'
+import { useAddressStore } from '@/stores/modules/address'
 
 // 收货地址列表数据
 const addressList = ref<AddressItem[]>([])
@@ -24,6 +25,14 @@ const onDeleteAddress = (id: string) => {
     },
   })
 }
+// 修改收货地址
+const onChangeAddress = (item: AddressItem) => {
+  // 修改地址
+  const addressStore = useAddressStore()
+  addressStore.changeSelectedAddress(item)
+  // 返回上一页
+  uni.navigateBack()
+}
 // 初始化调用，不能使用onLoad，onLoad仅在页面初始化时调用一次
 // 当新建修改后返回当前页将不会再次调用onLoad
 onShow(() => {
@@ -39,7 +48,7 @@ onShow(() => {
         <uni-swipe-action class="address-list">
           <!-- 收货地址项 -->
           <uni-swipe-action-item v-for="item in addressList" :key="item.id" class="item">
-            <view class="item-content">
+            <view @tap="onChangeAddress(item)" class="item-content">
               <view class="user">
                 {{ item.receiver }}
                 <text class="contact">{{ item.contact }}</text>
@@ -50,6 +59,7 @@ onShow(() => {
                 class="edit"
                 hover-class="none"
                 :url="`/pagesMember/address-form/address-form?id=${item.id}`"
+                @tap.stop="() => {}"
               >
                 修改
               </navigator>
