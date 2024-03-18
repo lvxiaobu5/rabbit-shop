@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { useMemberStore } from '../../stores/modules/member'
+import { useMemberStore } from '@/stores/modules/member'
 import {
   deleteMemberCartAPI,
   getMemberCartAPI,
   putMemberCartBySkuIdAPI,
   putMemberCartSelectedAPI,
-} from '../../services/cart'
+} from '@/services/cart'
 import { onShow } from '@dcloudio/uni-app'
 import { ref, computed } from 'vue'
 import type { CartItem } from '@/types/cart'
@@ -32,6 +32,7 @@ const selectedCartListCount = computed(() => {
 })
 // 计算选中总金额
 const selectedCartListMoney = computed(() => {
+  // toFixed(2)保留两位小数
   return selectedCartList.value
     ?.reduce((sum: number, item: CartItem) => sum + item.count * item.nowPrice, 0)
     .toFixed(2)
