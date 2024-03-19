@@ -27,18 +27,18 @@
     <td>城市选择</td>
   </tr>
   <tr>
-    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
-    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
-    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
-    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
-    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
-    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
-    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
-    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
-    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
-    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
-    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
-    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
+    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
+    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/category.jpg" alt=""></td>
+    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/cart.jpg" alt=""></td>
+    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/my.jpg" alt=""></td>
+    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/goods.jpg" alt=""></td>
+    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/sku.jpg" alt=""></td>
+    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/create.jpg" alt=""></td>
+    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/address.jpg" alt=""></td>
+    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/address-form.jpg" alt=""></td>
+    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/detail.jpg" alt=""></td>
+    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/list.jpg" alt=""></td>
+    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/city.jpg" alt=""></td>
   </tr>
 </table>
 
