@@ -12,7 +12,7 @@
 
 ### 项目截图
 <table>
-  <tr style="text-align:center">
+  <tr>
     <td>首页</td>
     <td>商品分类</td>
     <td>购物车</td>
