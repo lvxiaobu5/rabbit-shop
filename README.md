@@ -16,29 +16,41 @@
     <td>首页</td>
     <td>商品分类</td>
     <td>购物车</td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
+    <td><img src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/category.jpg" alt=""></td>
+    <td><img src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/cart.jpg" alt=""></td>
+  </tr>
+  <tr>
     <td>个人中心</td>
     <td>商品详情</td>
     <td>商品SKU</td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/my.jpg" alt=""></td>
+    <td><img src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/goods.jpg" alt=""></td>
+    <td><img src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/sku.jpg" alt=""></td>
+  </tr>
+  <tr>
     <td>填写订单</td>
     <td>地址管理</td>
     <td>新建地址</td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/create.jpg" alt=""></td>
+    <td><img src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/address.jpg" alt=""></td>
+    <td><img src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/address-form.jpg" alt=""></td>
+  </tr>
+  <tr>
     <td>订单详情</td>
     <td>订单列表</td>
     <td>城市选择</td>
   </tr>
   <tr>
-    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
-    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/category.jpg" alt=""></td>
-    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/cart.jpg" alt=""></td>
-    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/my.jpg" alt=""></td>
-    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/goods.jpg" alt=""></td>
-    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/sku.jpg" alt=""></td>
-    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/create.jpg" alt=""></td>
-    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/address.jpg" alt=""></td>
-    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/address-form.jpg" alt=""></td>
-    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/detail.jpg" alt=""></td>
-    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/list.jpg" alt=""></td>
-    <td><img width="300" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/city.jpg" alt=""></td>
+    <td><img src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/detail.jpg" alt=""></td>
+    <td><img src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/list.jpg" alt=""></td>
+    <td><img src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/city.jpg" alt=""></td>
   </tr>
 </table>
 
