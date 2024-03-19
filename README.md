@@ -11,7 +11,36 @@
 - 组件库：[uni-ui](https://uniapp.dcloud.net.cn/component/uniui/uni-ui.html)
 
 ### 项目截图
-https://gitee.com/Merlin-KaYo/images/blob/master/rabbit-shop/home.jpg
+<table>
+  <tr>
+    <td>首页</td>
+    <td>商品分类</td>
+    <td>购物车</td>
+    <td>个人中心</td>
+    <td>商品详情</td>
+    <td>商品SKU</td>
+    <td>填写订单</td>
+    <td>地址管理</td>
+    <td>新建地址</td>
+    <td>订单详情</td>
+    <td>订单列表</td>
+    <td>城市选择</td>
+  </tr>
+  <tr>
+    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
+    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
+    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
+    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
+    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
+    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
+    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
+    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
+    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
+    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
+    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
+    <td><img width="100" src="https://github.com/lvxiaobu5/images/blob/main/rabbit-shop/home.jpg" alt=""></td>
+  </tr>
+</table>
 
 ## 运行程序
 
