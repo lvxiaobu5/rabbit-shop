@@ -43,7 +43,11 @@ const getMemberOrderByIdData = async () => {
   const res = await getMemberOrderByIdAPI(query.id)
   order.value = res.result
 }
-
+// 倒计时结束事件
+const onTimeup = () => {
+  // 修改订单状态为已取消
+  order.value!.orderState = OrderState.YiQuXiao
+}
 // 页面渲染完毕，绑定动画效果
 onReady(() => {
   // 动画效果，导航栏背景色
@@ -96,14 +100,21 @@ onLoad(() => {
   <scroll-view scroll-y class="viewport" id="scroller" @scrolltolower="onScrolltolower">
     <template v-if="true">
       <!-- 订单状态 -->
-      <view class="overview" :style="{ paddingTop: safeAreaInsets!.top + 20 + 'px' }">
+      <view class="overview" :style="{ paddingTop: safeAreaInsets?.top + 20 + 'px' }">
         <!-- 待付款状态:展示去支付按钮和倒计时 -->
         <template v-if="order?.orderState === OrderState.DaiFuKuan">
           <view class="status icon-clock">等待付款</view>
           <view class="tips">
             <text class="money">应付金额: ¥ 99.00</text>
             <text class="time">支付剩余</text>
-            00 时 29 分 59 秒
+            <uni-countdown
+              :second="order?.countdown"
+              @timeup="onTimeup"
+              :show-day="false"
+              :show-colon="false"
+              color="#fff"
+              splitor-color="#fff"
+            />
           </view>
           <view class="button">去支付</view>
         </template>
