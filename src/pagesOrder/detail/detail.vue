@@ -5,6 +5,7 @@ import { onLoad, onReady } from '@dcloudio/uni-app'
 import { getMemberOrderByIdAPI } from '@/services/order'
 import type { OrderResult } from '@/types/order'
 import { OrderState, orderStateList } from '../../services/constants'
+import { getPayMockAPI, getPayWxPayMiniPayAPI } from '../../services/pay'
 
 // 弹出层组件
 const popup = ref<UniHelper.UniPopupInstance>()
@@ -47,6 +48,20 @@ const getMemberOrderByIdData = async () => {
 const onTimeup = () => {
   // 修改订单状态为已取消
   order.value!.orderState = OrderState.YiQuXiao
+}
+// 订单支付
+const onOrderPay = async () => {
+  if (import.meta.env.DEV) {
+    // 开发环境模拟支付
+    const res = await getPayMockAPI({ orderId: query.id })
+  } else {
+    // 生产环境微信支付
+    const res = await getPayWxPayMiniPayAPI({ orderId: query.id })
+    // 微信原生提供的支付函数
+    wx.requestPayment(res.result)
+  }
+  // 订单已经支付完了，不能返回了，关闭当前页再跳转支付结果页
+  uni.redirectTo({ url: `/pagesOrder/payment/payment?id=${query.id}` })
 }
 // 页面渲染完毕，绑定动画效果
 onReady(() => {
@@ -116,7 +131,7 @@ onLoad(() => {
               splitor-color="#fff"
             />
           </view>
-          <view class="button">去支付</view>
+          <view @tap="onOrderPay" class="button">去支付</view>
         </template>
         <!-- 其他订单状态:展示再次购买按钮 -->
         <template v-else>

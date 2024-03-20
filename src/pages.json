@@ -163,6 +163,12 @@
             // 改成自定义导航栏
             "navigationStyle": "custom"
           }
+        },
+        {
+          "path": "payment/payment",
+          "style": {
+            "navigationBarTitleText": "支付结果"
+          }
         }
       ]
     }
