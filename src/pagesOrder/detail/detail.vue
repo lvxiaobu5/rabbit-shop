@@ -2,7 +2,11 @@
 import { useGuessList } from '@/composables'
 import { ref } from 'vue'
 import { onLoad, onReady } from '@dcloudio/uni-app'
-import { getMemberOrderByIdAPI, getMemberOrderConsignmentByIdAPI } from '@/services/order'
+import {
+  getMemberOrderByIdAPI,
+  getMemberOrderConsignmentByIdAPI,
+  putMemberOrderReceiptByIdAPI,
+} from '@/services/order'
 import type { OrderResult } from '@/types/order'
 import { OrderState, orderStateList } from '../../services/constants'
 import { getPayMockAPI, getPayWxPayMiniPayAPI } from '../../services/pay'
@@ -66,12 +70,28 @@ const onOrderPay = async () => {
 }
 // 模拟发货
 const onOrderSend = async () => {
+  // 在vite中，如果if语句判断是否开发环境，如果环境判断不成立
+  // 那么if里面的代码并不会编译到项目中，而且连里面调用的后端接口也不会出现在编译后的项目中
   if (isDev) {
     await getMemberOrderConsignmentByIdAPI(query.id)
     uni.showToast({ icon: 'success', title: '成功发货' })
     // 主动更新订单状态
     order.value!.orderState = OrderState.DaiShouHuo
   }
+}
+// 确认收货
+const onOrderConfirm = () => {
+  // 二次确认弹窗
+  uni.showModal({
+    content: '为保障您的权益，请收到货并确认无误后，再确认收货',
+    success: async (success) => {
+      if (success.confirm) {
+        const res = await putMemberOrderReceiptByIdAPI(query.id)
+        // 更新订单状态
+        order.value = res.result
+      }
+    },
+  })
 }
 // 页面渲染完毕，绑定动画效果
 onReady(() => {
@@ -163,6 +183,14 @@ onLoad(() => {
             >
               模拟发货
             </view>
+            <!-- 待收货状态: 展示确认收货按钮 -->
+            <view
+              v-if="order.orderState === OrderState.DaiShouHuo"
+              @tap="onOrderConfirm"
+              class="button"
+            >
+              确认收货
+            </view>
           </view>
         </template>
       </view>
@@ -243,7 +271,7 @@ onLoad(() => {
       </view>
 
       <!-- 猜你喜欢 -->
-      <XtxGuess ref="guessRef" />
+      <Xtx-Guess ref="guessRef" />
 
       <!-- 底部操作栏 -->
       <view class="toolbar-height" :style="{ paddingBottom: safeAreaInsets?.bottom + 'px' }"></view>
