@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-// 高亮下标
-const activeIndex = ref(0)
-// 获取屏幕边界到安全区域距离
-const { safeAreaInsets } = uni.getSystemInfoSync()
+// 获取页面参数
+const query = defineProps<{
+  type: string
+}>()
 // tabs 数据
 const orderTabs = ref([
   { orderState: 0, title: '全部' },
@@ -13,6 +13,14 @@ const orderTabs = ref([
   { orderState: 3, title: '待收货' },
   { orderState: 4, title: '待评价' },
 ])
+// 高亮下标
+const activeIndex = ref(
+  orderTabs.value.findIndex(
+    (v: { orderState: number; title: string }) => v.orderState === Number(query.type),
+  ),
+)
+// 获取屏幕边界到安全区域距离
+const { safeAreaInsets } = uni.getSystemInfoSync()
 </script>
 
 <template>
