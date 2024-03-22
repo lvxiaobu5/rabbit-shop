@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+// 高亮下标
+const activeIndex = ref(0)
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
 // tabs 数据
@@ -17,14 +19,21 @@ const orderTabs = ref([
   <view class="viewport">
     <!-- tabs -->
     <view class="tabs">
-      <text class="item" v-for="item in 5" :key="item"> 待付款 </text>
+      <text
+        @tap="activeIndex = index"
+        class="item"
+        v-for="(item, index) in orderTabs"
+        :key="item.orderState"
+      >
+        {{ item.title }}
+      </text>
       <!-- 游标 -->
-      <view class="cursor" :style="{ left: 0 * 20 + '%' }"></view>
+      <view class="cursor" :style="{ left: activeIndex * 20 + '%' }"></view>
     </view>
     <!-- 滑动容器 -->
-    <swiper class="swiper">
+    <swiper @change="activeIndex = $event.detail.current" :current="activeIndex" class="swiper">
       <!-- 滑动项 -->
-      <swiper-item v-for="item in 5" :key="item">
+      <swiper-item v-for="item in orderTabs" :key="item.orderState">
         <!-- 订单列表 -->
         <scroll-view scroll-y class="orders">
           <view class="card" v-for="item in 2" :key="item">
