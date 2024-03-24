@@ -70,7 +70,6 @@ const onOrderSubmit = async () => {
   })
   // 关闭当前页面，跳转到订单详情页，传递订单id
   uni.redirectTo({ url: `/pagesOrder/detail/detail?id=${res.result.id}` })
-  console.log(2, res)
 }
 // 页面加载
 onLoad(() => {

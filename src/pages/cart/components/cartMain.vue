@@ -27,7 +27,6 @@ const selectedCartList = computed(() => {
 })
 // 计算选中总件数
 const selectedCartListCount = computed(() => {
-  console.log(1, selectedCartList.value)
   return selectedCartList.value?.reduce((sum: number, item: CartItem) => sum + item.count, 0)
 })
 // 计算选中总金额
