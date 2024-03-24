@@ -12,17 +12,44 @@ const props = defineProps<{
   orderState: number
 }>()
 // 请求参数
-const queryParams: OrderListParams = {
+const queryParams: Required<OrderListParams> = {
   page: 1,
   pageSize: 5,
   orderState: props.orderState,
 }
 // 订单列表数据
 const orderList = ref<OrderItem[]>([])
+// 设置当前下拉刷新状态，true 表示下拉刷新已经被触发
+const isTriggered = ref(false)
+// 是否最后一页
+const isFinish = ref(false)
+// 是否加载中标记，用于防止滚动触底触发多次请求
+const isLoading = ref(false)
 // 获取订单列表
 const getMemberOrderData = async () => {
+  // 如果数据出于加载中，退出函数
+  if (isLoading.value) return
+  // 如果数据到底了就退出
+  if (isFinish.value === true) {
+    return uni.showToast({ icon: 'none', title: '没有更多数据了~' })
+  }
+  // 发送请求前，标记为加载中
+  isLoading.value = true
+  // 发送请求
   const res = await getMemberOrderAPI(queryParams)
-  orderList.value = res.result.items
+  // 发送请求后，重置标记
+  isLoading.value = false
+  // orderList.value = res.result.items
+  // 数组追加
+  orderList.value.push(...res.result.items)
+  // 分页条件
+  if (queryParams.page < res.result.pages) {
+    // 页码累加
+    queryParams.page++
+  } else {
+    // 分页已结束
+    isFinish.value = true
+  }
 }
 // 订单支付
 const onOrderPay = async (id: string) => {
@@ -42,14 +69,38 @@ const onOrderPay = async (id: string) => {
   order.orderState = OrderState.DaiFaHuo
   getMemberOrderData()
 }
+// 重置数据
+const resetData = () => {
+  queryParams.page = 1
+  orderList.value = []
+  isFinish.value = false
+}
+// 自定义下拉刷新被触发
+const onRefresherrefresh = async () => {
+  // 开启...加载中动画
+  isTriggered.value = true
+  await resetData()
+  await getMemberOrderData()
+  // 开启...加载中动画
+  isTriggered.value = false
+}
 // 组件的生命周期
 onMounted(() => {
   getMemberOrderData()
+  console.log(safeAreaInsets)
 })
 </script>
 <template>
   <!-- 订单列表 -->
-  <scroll-view scroll-y class="orders">
+  <scroll-view
+    class="orders"
+    refresher-enabled
+    @refresherrefresh="onRefresherrefresh"
+    :refresher-triggered="isTriggered"
+    @scrolltolower="getMemberOrderData"
+    scroll-y
+    enable-back-to-top
+  >
     <view class="card" v-for="item in orderList" :key="item.id">
       <!-- 订单信息 -->
       <view class="status">
@@ -103,8 +154,8 @@ onMounted(() => {
       </view>
     </view>
     <!-- 底部提示文字 -->
-    <view class="loading-text" :style="{ paddingBottom: safeAreaInsets?.bottom + 'px' }">
-      {{ true ? '没有更多数据~' : '正在加载...' }}
+    <view class="loading-text" :style="{ paddingBottom: safeAreaInsets?.bottom + '10px' }">
+      {{ isFinish ? '人家是有底线的~' : '正在加载...' }}
     </view>
   </scroll-view>
 </template>
