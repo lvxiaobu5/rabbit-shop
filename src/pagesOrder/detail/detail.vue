@@ -137,7 +137,6 @@ const onOrderDelete = () => {
 // 页面渲染完毕，绑定动画效果
 onReady(() => {
   // 动画效果，导航栏背景色
-  // 动画效果,导航栏背景色
   pageInstance.animate(
     '.navbar',
     [{ backgroundColor: 'transparent' }, { backgroundColor: '#f8f8f8' }],
@@ -183,8 +182,14 @@ onLoad(() => {
       <view class="title">订单详情</view>
     </view>
   </view>
-  <scroll-view scroll-y class="viewport" id="scroller" @scrolltolower="onScrolltolower">
-    <template v-if="true">
+  <scroll-view
+    enable-back-to-top
+    scroll-y
+    class="viewport"
+    id="scroller"
+    @scrolltolower="onScrolltolower"
+  >
+    <template v-if="order">
       <!-- 订单状态 -->
       <view class="overview" :style="{ paddingTop: safeAreaInsets?.top + 20 + 'px' }">
         <!-- 待付款状态:展示去支付按钮和倒计时 -->
@@ -276,8 +281,10 @@ onLoad(() => {
           </navigator>
           <!-- 待评价状态:展示按钮 -->
           <view class="action" v-if="order.orderState === OrderState.DaiPingJia">
-            <view class="button primary">申请售后</view>
-            <navigator url="" class="button"> 去评价 </navigator>
+            <navigator open-type="switchTab" url="/pages/my/my" class="button primary"
+              >申请售后</navigator
+            >
+            <navigator open-type="switchTab" url="/pages/my/my" class="button"> 去评价 </navigator>
           </view>
         </view>
         <!-- 合计 -->
@@ -329,11 +336,17 @@ onLoad(() => {
             再次购买
           </navigator>
           <!-- 待收货状态: 展示确认收货 -->
-          <view v-if="order.orderState === OrderState.DaiShouHuo" class="button primary">
+          <view
+            @tap="onOrderConfirm"
+            v-if="order.orderState === OrderState.DaiShouHuo"
+            class="button primary"
+          >
             确认收货
           </view>
           <!-- 待评价状态: 展示去评价 -->
-          <view v-if="order.orderState === OrderState.DaiPingJia" class="button"> 去评价 </view>
+          <view v-if="order.orderState === OrderState.DaiPingJia" class="button">
+            <navigator open-type="switchTab" url="/pages/my/my"> 去评价 </navigator>
+          </view>
           <!-- 待评价/已完成/已取消 状态: 展示删除订单 -->
           <view
             @tap="onOrderDelete"

@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { getMemberOrderPreAPI, getMemberOrderPreNowAPI, postMemberOrderAPI } from '@/services/order'
+import {
+  getMemberOrderPreAPI,
+  getMemberOrderPreNowAPI,
+  getMemberOrderRepurchaseByIdAPI,
+  postMemberOrderAPI,
+} from '@/services/order'
 import { onLoad } from '@dcloudio/uni-app'
 import type { OrderPreGoods, OrderPreResult } from '../../types/order'
 import type { AddressItem } from '../../types/address'
@@ -25,6 +30,7 @@ const addressStore = useAddressStore()
 const query = defineProps<{
   skuId?: string
   count?: string
+  orderId?: string
 }>()
 // 当前配送时间
 const activeDelivery = computed(() => deliveryList.value[activeIndex.value])
@@ -46,6 +52,10 @@ const getMemberOrderPreData = async () => {
       skuId: query.skuId,
       count: query.count,
     })
+    orderPre.value = res.result
+  } else if (query.orderId) {
+    // 再次购买
+    const res = await getMemberOrderRepurchaseByIdAPI(query.orderId)
     orderPre.value = res.result
   } else {
     const res = await getMemberOrderPreAPI()

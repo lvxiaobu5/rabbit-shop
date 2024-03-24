@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getMemberOrderAPI } from '@/services/order'
+import { getMemberOrderAPI, putMemberOrderReceiptByIdAPI } from '@/services/order'
 import type { OrderItem, OrderListParams } from '@/types/order'
 import { onMounted, ref } from 'vue'
 import { orderStateList, OrderState } from '@/services/constants'
@@ -67,7 +67,23 @@ const onOrderPay = async (id: string) => {
   // 更新订单状态
   const order = orderList.value.find((v: OrderItem) => v.id === id)
   order.orderState = OrderState.DaiFaHuo
+  await resetData()
   getMemberOrderData()
+}
+// 确认收货
+const onOrderConfirm = (id: string) => {
+  // 二次确认弹窗
+  uni.showModal({
+    content: '为保障您的权益，请收到货并确认无误后，再确认收货',
+    success: async (success) => {
+      if (success.confirm) {
+        await putMemberOrderReceiptByIdAPI(id)
+        // 更新订单列表数据
+        await resetData()
+        getMemberOrderData()
+      }
+    },
+  })
 }
 // 重置数据
 const resetData = () => {
@@ -87,7 +103,6 @@ const onRefresherrefresh = async () => {
 // 组件的生命周期
 onMounted(() => {
   getMemberOrderData()
-  console.log(safeAreaInsets)
 })
 </script>
 <template>
@@ -141,15 +156,19 @@ onMounted(() => {
         <template v-else>
           <navigator
             class="button secondary"
-            :url="`/pagesOrder/create/create?orderId=id`"
+            :url="`/pagesOrder/create/create?orderId=${item.id}`"
             hover-class="none"
           >
             再次购买
           </navigator>
           <!-- 待收货状态: 展示确认收货 -->
-          <view v-if="item.orderState === OrderState.DaiShouHuo" class="button primary"
-            >确认收货</view
+          <view
+            @tap="onOrderConfirm(item.id)"
+            v-if="item.orderState === OrderState.DaiShouHuo"
+            class="button primary"
           >
+            确认收货
+          </view>
         </template>
       </view>
     </view>
