@@ -70,7 +70,7 @@ const onTimeup = () => {
 const onOrderPay = async () => {
   if (import.meta.env.DEV) {
     // 开发环境模拟支付
-    const res = await getPayMockAPI({ orderId: query.id })
+    await getPayMockAPI({ orderId: query.id })
   } else {
     // 生产环境微信支付
     const res = await getPayWxPayMiniPayAPI({ orderId: query.id })

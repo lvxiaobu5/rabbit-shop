@@ -3,6 +3,7 @@ import { getMemberOrderAPI } from '@/services/order'
 import type { OrderItem, OrderListParams } from '@/types/order'
 import { onMounted, ref } from 'vue'
 import { orderStateList, OrderState } from '@/services/constants'
+import { getPayMockAPI, getPayWxPayMiniPayAPI } from '@/services/pay'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -22,6 +23,24 @@ const orderList = ref<OrderItem[]>([])
 const getMemberOrderData = async () => {
   const res = await getMemberOrderAPI(queryParams)
   orderList.value = res.result.items
+}
+// 订单支付
+const onOrderPay = async (id: string) => {
+  if (import.meta.env.DEV) {
+    // 开发环境模拟支付
+    await getPayMockAPI({ orderId: id })
+  } else {
+    // 生产环境微信支付
+    const res = await getPayWxPayMiniPayAPI({ orderId: id })
+    // 微信原生提供的支付函数
+    wx.requestPayment(res.result)
+  }
+  // 成功提示
+  uni.showToast({ icon: 'success', title: '支付成功' })
+  // 更新订单状态
+  const order = orderList.value.find((v: OrderItem) => v.id === id)
+  order.orderState = OrderState.DaiFaHuo
+  getMemberOrderData()
 }
 // 组件的生命周期
 onMounted(() => {
@@ -66,7 +85,7 @@ onMounted(() => {
       <view class="action">
         <!-- 待付款状态：显示去支付按钮 -->
         <template v-if="item.orderState === OrderState.DaiFuKuan">
-          <view class="button primary">去支付</view>
+          <view @tap="onOrderPay(item.id)" class="button primary">去支付</view>
         </template>
         <template v-else>
           <navigator
