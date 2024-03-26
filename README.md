@@ -122,3 +122,11 @@ npm run dev:h5
 ├── tsconfig.json              # typescript 配置
 └── vite.config.ts             # vite 配置
 ```
+
+## 打包程序
+### 小程序端
+npm run build:mp-weixin
+### H5端
+npm run build:h5
+### APP端
+需 HbuilderX 工具

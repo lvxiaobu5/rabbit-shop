@@ -72,10 +72,12 @@ const onOrderPay = async () => {
     // 开发环境模拟支付
     await getPayMockAPI({ orderId: query.id })
   } else {
+    // #ifdef MP-WEIXIN
     // 生产环境微信支付
     const res = await getPayWxPayMiniPayAPI({ orderId: query.id })
     // 微信原生提供的支付函数
     wx.requestPayment(res.result)
+    // #endif
   }
   // 订单已经支付完了，不能返回了，关闭当前页再跳转支付结果页
   uni.redirectTo({ url: `/pagesOrder/payment/payment?id=${query.id}` })

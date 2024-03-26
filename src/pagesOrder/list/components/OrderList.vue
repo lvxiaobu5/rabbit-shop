@@ -57,10 +57,12 @@ const onOrderPay = async (id: string) => {
     // 开发环境模拟支付
     await getPayMockAPI({ orderId: id })
   } else {
+    // #ifdef MP-WEIXIN
     // 生产环境微信支付
     const res = await getPayWxPayMiniPayAPI({ orderId: id })
     // 微信原生提供的支付函数
     wx.requestPayment(res.result)
+    // #endif
   }
   // 成功提示
   uni.showToast({ icon: 'success', title: '支付成功' })

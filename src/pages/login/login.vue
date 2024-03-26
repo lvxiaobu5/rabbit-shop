@@ -4,6 +4,7 @@ import type { LoginResult } from '@/types/member'
 import { onLoad } from '@dcloudio/uni-app'
 import { postLoginWxMinAPI, postLoginWxMinSimpleAPI } from '../../services/login'
 
+// #ifdef MP-WEIXIN
 // 获取code登录凭证，encryptedData和iv仅对企业开放，不对个人开放
 let code = ''
 const onGetphonenumber: UniHelper.ButtonOnGetphonenumber = async (ev) => {
@@ -16,6 +17,12 @@ const onGetphonenumber: UniHelper.ButtonOnGetphonenumber = async (ev) => {
   })
   loginSuccess(res.result)
 }
+onLoad(async () => {
+  // 微信官方提供的API
+  const res = await wx.login()
+  code = res.code
+})
+// #endif
 // 模拟手机号快捷登录（个人开发的写法）
 const onGetphonenumberSimple = async () => {
   const res = await postLoginWxMinSimpleAPI('17820686622')
@@ -33,12 +40,6 @@ const loginSuccess = (profile: LoginResult) => {
     uni.navigateBack()
   }, 500)
 }
-
-onLoad(async () => {
-  // 微信官方提供的API
-  const res = await wx.login()
-  code = res.code
-})
 </script>
 
 <template>
@@ -50,15 +51,19 @@ onLoad(async () => {
     </view>
     <view class="login">
       <!-- 网页端表单登录 -->
-      <!-- <input class="input" type="text" placeholder="请输入用户名/手机号码" /> -->
-      <!-- <input class="input" type="text" password placeholder="请输入密码" /> -->
-      <!-- <button class="button phone">登录</button> -->
+      <!-- #ifdef H5 -->
+      <input class="input" type="text" placeholder="请输入用户名/手机号码" />
+      <input class="input" type="text" password placeholder="请输入密码" />
+      <button class="button phone">登录</button>
+      <!-- #endif -->
 
       <!-- 小程序端授权登录 -->
+      <!-- #ifdef MP-WEIXIN -->
       <button open-type="getPhoneNumber" @getphonenumber="onGetphonenumber" class="button phone">
         <text class="icon icon-phone"></text>
         手机号快捷登录
       </button>
+      <!-- #endif -->
       <view class="extra">
         <view class="caption">
           <text>其他登录方式</text>
