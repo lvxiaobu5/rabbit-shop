@@ -10,55 +10,54 @@ import { onShow } from '@dcloudio/uni-app'
 import { ref, computed } from 'vue'
 import type { CartItem } from '@/types/cart'
 import type { InputNumberBoxEvent } from '@/components/vk-data-input-number-box/vk-data-input-number-box'
+import { useGuessList } from '@/composables'
 
-// 购物车数据
-const cartList = ref<CartItem[]>()
-// 获取会员store
+// 是否适配底部安全区域
+defineProps<{
+  safeAreaInsetBottom?: boolean
+}>()
+
+// 获取屏幕边界到安全区域距离
+const { safeAreaInsets } = uni.getSystemInfoSync()
+
+// 获取会员Store
 const memberStore = useMemberStore()
 
-// 计算全选状态
-const isSelectedAll = computed(() => {
-  // 注意：空数组[]调用every方法也会返回true
-  return cartList.value?.length && cartList.value.every((v: CartItem) => v.selected)
-})
-// 计算选中商品列表
-const selectedCartList = computed(() => {
-  return cartList.value?.filter((v: CartItem) => v.selected)
-})
-// 计算选中总件数
-const selectedCartListCount = computed(() => {
-  return selectedCartList.value?.reduce((sum: number, item: CartItem) => sum + item.count, 0)
-})
-// 计算选中总金额
-const selectedCartListMoney = computed(() => {
-  // toFixed(2)保留两位小数
-  return selectedCartList.value
-    ?.reduce((sum: number, item: CartItem) => sum + item.count * item.nowPrice, 0)
-    .toFixed(2)
-})
-
 // 获取购物车数据
+const cartList = ref<CartItem[]>([])
 const getMemberCartData = async () => {
   const res = await getMemberCartAPI()
   cartList.value = res.result
 }
-// 删除购物车商品
+
+// 初始化调用: 页面显示触发
+onShow(() => {
+  if (memberStore.profile) {
+    getMemberCartData()
+  }
+})
+
+// 点击删除按钮
 const onDeleteCart = (skuId: string) => {
+  // 弹窗二次确认
   uni.showModal({
-    content: '是否确认删除',
+    content: '是否删除',
     success: async (res) => {
       if (res.confirm) {
+        // 后端删除单品
         await deleteMemberCartAPI({ ids: [skuId] })
-        uni.showToast({ icon: 'success', title: '删除成功' })
+        // 重新获取列表
         getMemberCartData()
       }
     },
   })
 }
+
 // 修改商品数量
-const onChangeCount = async (ev: InputNumberBoxEvent) => {
-  await putMemberCartBySkuIdAPI(ev.index, { count: ev.value })
+const onChangeCount = (ev: InputNumberBoxEvent) => {
+  putMemberCartBySkuIdAPI(ev.index, { count: ev.value })
 }
+
 // 修改选中状态-单品修改
 const onChangeSelected = (item: CartItem) => {
   // 前端数据更新-是否选中取反
@@ -66,6 +65,12 @@ const onChangeSelected = (item: CartItem) => {
   // 后端数据更新
   putMemberCartBySkuIdAPI(item.skuId, { selected: item.selected })
 }
+
+// 计算全选状态
+const isSelectedAll = computed(() => {
+  return cartList.value.length && cartList.value.every((v: CartItem) => v.selected)
+})
+
 // 修改选中状态-全选修改
 const onChangeSelectedAll = () => {
   // 全选状态取反
@@ -77,28 +82,46 @@ const onChangeSelectedAll = () => {
   // 后端数据更新
   putMemberCartSelectedAPI({ selected: _isSelectedAll })
 }
-// 去支付或提示请选择商品
+
+// 计算选中单品列表
+const selectedCartList = computed(() => {
+  return cartList.value.filter((v: CartItem) => v.selected)
+})
+
+// 计算选中总件数
+const selectedCartListCount = computed(() => {
+  return selectedCartList.value.reduce((sum: number, item: CartItem) => sum + item.count, 0)
+})
+
+// 计算选中总金额
+const selectedCartListMoney = computed(() => {
+  return selectedCartList.value
+    .reduce((sum: number, item: CartItem) => sum + item.count * item.nowPrice, 0)
+    .toFixed(2)
+})
+
+// 结算按钮
 const gotoPayment = () => {
   if (selectedCartListCount.value === 0) {
-    return uni.showToast({ icon: 'none', title: '请选择商品' })
+    return uni.showToast({
+      icon: 'none',
+      title: '请选择商品',
+    })
   }
-  // 跳转到结算页，url一定要以/开头，否则报错
+  // 跳转到结算页
   uni.navigateTo({ url: '/pagesOrder/create/create' })
 }
-// 初始化调用，onLoad在页面返回时不加载，不适用，用onShow页面显示就会触发
-onShow(() => {
-  if (memberStore.profile) {
-    getMemberCartData()
-  }
-})
+
+// 猜你喜欢
+const { guessRef, onScrolltolower } = useGuessList()
 </script>
 
 <template>
-  <scroll-view scroll-y class="scroll-view">
+  <scroll-view enable-back-to-top scroll-y class="scroll-view" @scrolltolower="onScrolltolower">
     <!-- 已登录: 显示购物车 -->
     <template v-if="memberStore.profile">
       <!-- 购物车列表 -->
-      <view class="cart-list" v-if="cartList?.length">
+      <view class="cart-list" v-if="cartList.length">
         <!-- 优惠提示 -->
         <view class="tips">
           <text class="label">满减</text>
@@ -152,12 +175,16 @@ onShow(() => {
       <view class="cart-blank" v-else>
         <image src="/static/images/blank_cart.png" class="image" />
         <text class="text">购物车还是空的，快来挑选好货吧</text>
-        <navigator open-type="switchTab" url="/pages/index/index" hover-class="none">
+        <navigator url="/pages/index/index" hover-class="none">
           <button class="button">去首页看看</button>
         </navigator>
       </view>
       <!-- 吸底工具栏 -->
-      <view class="toolbar">
+      <view
+        v-if="cartList.length"
+        class="toolbar"
+        :style="{ paddingBottom: safeAreaInsetBottom ? safeAreaInsets?.bottom + 'px' : 0 }"
+      >
         <text @tap="onChangeSelectedAll" class="all" :class="{ checked: isSelectedAll }">全选</text>
         <text class="text">合计:</text>
         <text class="amount">{{ selectedCartListMoney }}</text>
@@ -180,7 +207,7 @@ onShow(() => {
       </navigator>
     </view>
     <!-- 猜你喜欢 -->
-    <XtxGuess ref="guessRef"></XtxGuess>
+    <Xtx-Guess ref="guessRef" />
     <!-- 底部占位空盒子 -->
     <view class="toolbar-height"></view>
   </scroll-view>
@@ -393,7 +420,7 @@ onShow(() => {
   position: fixed;
   left: 0;
   right: 0;
-  bottom: var(--window-bottom);
+  bottom: calc(var(--window-bottom));
   z-index: 1;
 
   height: 100rpx;
