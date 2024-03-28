@@ -178,7 +178,13 @@
   </view>
 </template>
 
-<style>
+<style lang="scss">
+/* #ifdef H5 || APP-PLUS */
+// H5端和APP端默认开启了scoped 样式隔离，导致组件基础样式无效
+@import '@/components/styles/Xtx-Swiper.scss';
+@import './styles/CategoryPanel.scss';
+@import './styles/HotPanel.scss';
+/* #endif */
 /*
 此文件为开发者工具生成，生成时间: 2024/3/7下午4:40:13
 
