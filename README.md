@@ -81,7 +81,7 @@ npm run dev:h5
 
 3. 微信开发者工具导入 `/dist/dev/mp-weixin` 目录
 
-### 工程结构解析
+## 工程结构解析
 
 ```
 ├── .husky                     # Git Hooks
@@ -124,9 +124,11 @@ npm run dev:h5
 ```
 
 ## 打包程序
-### 小程序端
+```shell
+# 小程序端
 npm run build:mp-weixin
-### H5端
+# H5端
 npm run build:h5
-### APP端
+# APP端
 需 HbuilderX 工具
+```
