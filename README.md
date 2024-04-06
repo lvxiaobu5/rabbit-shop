@@ -75,7 +75,7 @@ npm run dev:mp-weixin
 # H5端
 npm run dev:h5
 
-# App端
+# APP端
 需 HbuilderX 工具，运行 - 运行到手机或模拟器
 ```
 
@@ -125,10 +125,12 @@ npm run dev:h5
 
 ## 打包程序
 ```shell
-# 小程序端
+# 微信小程序端
 npm run build:mp-weixin
+
 # H5端
 npm run build:h5
+
 # APP端
 需 HbuilderX 工具
 ```
